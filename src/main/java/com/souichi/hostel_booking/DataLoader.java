@@ -18,15 +18,11 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
         if (roomRepository.count() == 0) {
             Room room1 = new Room();
-            room1.setName("Standard Room");
             room1.setPricePerNight(5000);
-            room1.setAvailable(true);
             roomRepository.save(room1);
 
             Room room2 = new Room();
-            room2.setName("Deluxe Room");
             room2.setPricePerNight(8000);
-            room2.setAvailable(true);
             roomRepository.save(room2);
         }
     }
