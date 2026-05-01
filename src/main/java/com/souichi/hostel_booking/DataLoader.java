@@ -16,7 +16,9 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (roomRepository.count() == 0) {
+        if (roomRepository.count() < 3) {
+            roomRepository.deleteAll();
+
             Room room1 = new Room();
             room1.setPricePerNight(5000);
             roomRepository.save(room1);
@@ -24,6 +26,10 @@ public class DataLoader implements CommandLineRunner {
             Room room2 = new Room();
             room2.setPricePerNight(8000);
             roomRepository.save(room2);
+
+            Room room3 = new Room();
+            room3.setPricePerNight(7000);
+            roomRepository.save(room3);
         }
     }
 }
