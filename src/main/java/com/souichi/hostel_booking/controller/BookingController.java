@@ -4,6 +4,7 @@ import com.souichi.hostel_booking.model.Booking;
 import com.souichi.hostel_booking.model.Room;
 import com.souichi.hostel_booking.repository.BookingRepository;
 import com.souichi.hostel_booking.repository.RoomRepository;
+import com.souichi.hostel_booking.service.EmailService; // ✅ NEW
 import org.springframework.web.bind.annotation.*;
 
 import java.time.temporal.ChronoUnit;
@@ -17,11 +18,14 @@ public class BookingController {
 
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
+    private final EmailService emailService; // ✅ NEW
 
     public BookingController(BookingRepository bookingRepository,
-                             RoomRepository roomRepository) {
+                             RoomRepository roomRepository,
+                             EmailService emailService) { // ✅ NEW
         this.bookingRepository = bookingRepository;
         this.roomRepository = roomRepository;
+        this.emailService = emailService; // ✅ NEW
     }
 
     // GET all bookings
@@ -35,6 +39,13 @@ public class BookingController {
     public Map<String, Object> createBooking(@RequestBody Booking booking) {
 
         Map<String, Object> response = new HashMap<>();
+
+        // 🔴 NEW: check email
+        if (booking.getGuestEmail() == null || booking.getGuestEmail().isBlank()) {
+            response.put("success", false);
+            response.put("message", "Please enter your email.");
+            return response;
+        }
 
         // 1️⃣ Validate dates
         if (booking.getCheckOut().isBefore(booking.getCheckIn()) ||
@@ -83,9 +94,16 @@ public class BookingController {
         // 6️⃣ Save booking
         Booking savedBooking = bookingRepository.save(booking);
 
-        // 7️⃣ Return response
+        // ✅ 7️⃣ SEND EMAIL (AFTER SAVE)
+        try {
+            emailService.sendBookingConfirmation(savedBooking);
+        } catch (Exception e) {
+            System.out.println("Email failed: " + e.getMessage());
+        }
+
+        // 8️⃣ Return response
         response.put("success", true);
-        response.put("message", "Booking successful!");
+        response.put("message", "Booking successful! Check your email for confirmation.");
         response.put("booking", savedBooking);
 
         return response;
