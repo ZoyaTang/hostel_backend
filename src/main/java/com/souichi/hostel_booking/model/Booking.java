@@ -18,14 +18,12 @@ public class Booking {
     private String status;
     private double totalPrice;
 
-    // 🔽 ADD THESE GETTERS & SETTERS
-    public double getTotalPrice() {
-    return totalPrice;
-    }
+    // ✅ NEW FIELD (email)
+    private String guestEmail;
 
-    public void setTotalPrice(double totalPrice) {
-    this.totalPrice = totalPrice;
-    }
+    // =====================
+    // GETTERS & SETTERS
+    // =====================
 
     public Long getId() {
         return id;
@@ -61,5 +59,22 @@ public class Booking {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    // ✅ NEW GETTER/SETTER
+    public String getGuestEmail() {
+        return guestEmail;
+    }
+
+    public void setGuestEmail(String guestEmail) {
+        this.guestEmail = guestEmail;
     }
 }
